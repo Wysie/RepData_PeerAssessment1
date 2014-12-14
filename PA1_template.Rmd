@@ -78,3 +78,16 @@ The **mean** value is the same as the first part of the assignment. The **median
 From this observation, we can conclude that the impact of inputting missing values based on using the mean of the existing values is negligible.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+#### Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+```{r echo=TRUE}
+activity_merged$day <- weekdays(as.Date(activity_merged$date))
+activity_merged$level <- ifelse(activity_merged$day %in% c("Saturday", "Sunday"), "weekend", "weekday")
+```
+
+#### Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+```{r echo=TRUE}
+intervalAndStepsLevel <- aggregate(steps ~ interval + level, activity_merged, mean)
+
+library(lattice)
+xyplot(steps ~ interval | factor(level), data=intervalAndStepsLevel, aspect=1/2, xlab="Interval", ylab="Number of steps", type="l")
+```
